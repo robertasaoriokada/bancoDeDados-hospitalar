@@ -1,14 +1,14 @@
 -- Tabela Pessoa
 CREATE TABLE Pessoa (
-    CPF INT PRIMARY KEY,
-    Nome VARCHAR(100),
+    CPF VARCHAR(11) PRIMARY KEY, --PQ TEM CPF Q COMEÇA COM 0 OU 00
+    Nome VARCHAR(100) NOT NULL,
     Sobrenome VARCHAR(100),
-    Cargo INT,
-    Endereco VARCHAR(255),
-    CEP VARCHAR(20),
+    Cargo VARCHAR(100),
+    Endereco VARCHAR(255) NOT NULL,
+    CEP VARCHAR(20) NOT NULL,
     Bairro VARCHAR(100),
     Telefone VARCHAR(20),
-    Nascimento DATE,
+    Nascimento DATE NOT NULL,
     EstadoCivil VARCHAR(50)
 );
 
@@ -17,21 +17,20 @@ CREATE TABLE Medico (
     Id_pessoa INT PRIMARY KEY REFERENCES Pessoa(CPF), 
     Salario NUMERIC(10,2),
     Especialidade INT REFERENCES Especialidade(ID), 
-    Consultas INT,
-    Cirurgias INT,
+    Consultas_fk INT REFERENCES Consulta(Id),
+    Cirurgias_fk INT REFERENCES Cirurgia(Id),
     Plantoes INT
 );
 
 -- Tabela Paciente )
 CREATE TABLE Paciente (
     Id_pessoa INT PRIMARY KEY REFERENCES Pessoa(CPF), 
-    Diagnostico VARCHAR(255)
+    Diagnostico VARCHAR(255) NOT NULL
 );
 
 -- Tabela Funcionario 
 CREATE TABLE Funcionario (
     Id_pessoa INT PRIMARY KEY REFERENCES Pessoa(CPF), 
-	Nome VACHAR(100),
     Salario NUMERIC(10,2),  
     Cargo VARCHAR(100),
     Departamento VARCHAR(100)
@@ -41,7 +40,7 @@ CREATE TABLE Funcionario (
 CREATE TABLE Estoque (
     Id SERIAL PRIMARY KEY,
     Nome VARCHAR(100),
-    Quantidade NUMERIC(10,2),
+    Quantidade INTEGER,
     Validade DATE,
     Preco NUMERIC(10,2)
 );
@@ -100,4 +99,47 @@ CREATE TABLE Internacao (
     Paciente INT REFERENCES Paciente(Id_pessoa), 
     Data_inicio DATE,
     Data_fim DATE
+    --MEL : acho q n tem como ser date pq ele vai adicionar os dois no começo do banco, ou seja, vai fica os dois iguais
 );
+
+--INSERTS
+
+INSERT INTO Pessoa (CPF, Nome, Sobrenome, Cargo, Endereco, CEP, Bairro, Telefone, Nascimento, EstadoCivil) VALUES
+('98765432109', 'Maria', 'Oliveira', 'Paciente', 'Rua B, 456', '98765-432', 'Jardim', '21987654321', '02-02-1990', 'Casada'),
+('34567890123', 'Ana', 'Costa', 'Paciente', 'Rua D, 101', '76543-210', 'Centro', '41987654321', '09-06-1979', 'Divorciada'),
+('45678901234', 'Carlos', 'Santos', 'Funcionário', 'Rua E, 202', '65432-109', 'Jardim', '51987654321', '04-08-1991', 'Casado'),
+('56789012345', 'Beatriz', 'Almeida', 'Paciente', 'Rua F, 303', '54321-098', 'Centro', '61987654321', '05-06-1989', 'Viúva'),
+('67890123456', 'Lucas', 'Ferreira', 'Funcionário', 'Rua G, 404', '43210-987', 'Bela Vista', '71987654321', '19-04-1980', 'Casado'),
+('89012345678', 'Bruno', 'Pereira', 'Paciente', 'Rua I, 606', '21098-765', 'Jardim', '91987654321', '20-02-1999', 'Solteiro'),
+('90123456789', 'Carla', 'Ribeiro', 'Funcionário', 'Rua J, 707', '10987-654', 'Bela Vista', '21987654321', '18-04-2002', 'Casada'),
+('01234567890', 'Roberto', 'Melo', 'Paciente', 'Rua K, 808', '09876-543', 'Centro', '31987654321', '05-07-1990', 'Divorciado'),
+('11223344556', 'Clara', 'Silva', 'Funcionário', 'Rua L, 909', '08765-432', 'Bela Vista', '41987654321', '15-10-1991', 'Solteira'),
+('33445566778', 'Lucia', 'Barros', 'Paciente', 'Rua N, 1111', '06543-210', 'Jardim', '61987654321', '22-03-1989', 'Solteira'),
+('44556677889', 'Tiago', 'Araujo', 'Funcionário', 'Rua O, 1212', '05432-109', 'Bela Vista', '71987654321', '27-09-1969', 'Casado'),
+('55667788990', 'Fernanda', 'Dantas', 'Paciente', 'Rua P, 1313', '04321-098', 'Centro', '81987654321', '19-01-1940', 'Divorciada'),
+('66778899001', 'Paulo', 'Moraes', 'Funcionário', 'Rua Q, 1414', '03210-987', 'Jardim', '91987654321', '23-05-1967', 'Casado'),
+('88990011223', 'Mateus', 'Siqueira', 'Paciente', 'Rua S, 1616', '01098-765', 'Centro', '31987654321', '01-02-2001', 'Solteiro'),
+('99001122334', 'Juliana', 'Teixeira', 'Funcionário', 'Rua T, 1717', '00987-654', 'Jardim', '41987654321', '06-07-2000', 'Casada'),
+('22334455667', 'Marcos', 'Gomes', 'Médico', 'Rua M, 1010', '07654-321', 'Centro', '51987654321', '28-12-1960', 'Viúvo'),
+('77889900112', 'Raquel', 'Carvalho', 'Médico', 'Rua R, 1515', '02109-876', 'Bela Vista', '21987654321', '09-08-1997', 'Solteira'),
+('78901234567', 'Paula', 'Lima', 'Médico', 'Rua H, 505', '32109-876', 'Centro', '81987654321', '30-01-2000', 'Solteira'),
+('12345678901', 'João', 'Silva', 'Médico', 'Rua A, 123', '12345-678', 'Centro', '11987654321', '01-01-1980', 'Solteiro'),
+('23456789012', 'Pedro', 'Souza', 'Médico', 'Rua C, 789', '87654-321', 'Bela Vista', '31987654321', '15-09-1985', 'Solteiro'),
+('34567890101', 'André', 'Martins', 'Médico', 'Rua T, 2020', '01234-567', 'Centro', '31987651234', '01-05-1985', 'Solteiro'),
+('45678901202', 'Isabela', 'Rodrigues', 'Médico', 'Rua U, 2121', '09876-543', 'Jardim', '41987652345', '15-08-1987', 'Casada'),
+('56789012303', 'Gustavo', 'Fernandes', 'Médico', 'Rua V, 2323', '04321-098', 'Bela Vista', '51987653456', '20-02-1990', 'Divorciado'),
+('67890123404', 'Larissa', 'Figueiredo', 'Médico', 'Rua W, 2424', '98765-432', 'Centro', '61987654567', '11-09-1992', 'Solteira'),
+('78901234505', 'Rodrigo', 'Cardoso', 'Médico', 'Rua X, 2525', '76543-210', 'Bela Vista', '71987655678', '10-12-1983', 'Casado'),
+('89012345606', 'Marcela', 'Cunha', 'Médico', 'Rua Y, 2626', '65432-109', 'Jardim', '81987656789', '06-04-1988', 'Casada'),
+('90123456707', 'Felipe', 'Macedo', 'Médico', 'Rua Z, 2727', '54321-098', 'Centro', '91987657890', '13-11-1993', 'Solteiro'),
+('01234567808', 'Camila', 'Souza', 'Médico', 'Rua AA, 2828', '43210-987', 'Bela Vista', '21987658901', '05-06-1989', 'Divorciada'),
+('12345678909', 'Vitor', 'Moreira', 'Médico', 'Rua BB, 2929', '32109-876', 'Centro', '31987659012', '25-07-1990', 'Casado'),
+('23456789010', 'Patrícia', 'Neves', 'Médico', 'Rua CC, 3030', '21098-765', 'Jardim', '41987660123', '17-03-1986', 'Viúva'),
+('34567890111', 'Renato', 'Azevedo', 'Médico', 'Rua DD, 3131', '10987-654', 'Centro', '51987661234', '22-09-1992', 'Solteiro'),
+('45678901212', 'Eduarda', 'Freitas', 'Médico', 'Rua EE, 3232', '09876-543', 'Jardim', '61987662345', '29-10-1984', 'Casada'),
+('56789012313', 'Adriana', 'Nogueira', 'Médico', 'Rua FF, 3333', '54321-210', 'Centro', '71987663456', '08-12-1986', 'Solteira'),
+('67890123414', 'Bruno', 'Alves', 'Médico', 'Rua GG, 3434', '65432-321', 'Jardim', '81987664567', '18-06-1990', 'Casado'),
+('78901234515', 'Helena', 'Moura', 'Médico', 'Rua HH, 3535', '76543-432', 'Bela Vista', '91987665678', '27-01-1985', 'Divorciada');
+
+
+
