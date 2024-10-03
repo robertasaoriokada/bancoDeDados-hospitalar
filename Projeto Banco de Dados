@@ -1,0 +1,103 @@
+-- Tabela Pessoa
+CREATE TABLE Pessoa (
+    CPF INT PRIMARY KEY,
+    Nome VARCHAR(100),
+    Sobrenome VARCHAR(100),
+    Cargo INT,
+    Endereco VARCHAR(255),
+    CEP VARCHAR(20),
+    Bairro VARCHAR(100),
+    Telefone VARCHAR(20),
+    Nascimento DATE,
+    EstadoCivil VARCHAR(50)
+);
+
+-- Tabela Medico 
+CREATE TABLE Medico (
+    Id_pessoa INT PRIMARY KEY REFERENCES Pessoa(CPF), 
+    Salario NUMERIC(10,2),
+    Especialidade INT REFERENCES Especialidade(ID), 
+    Consultas INT,
+    Cirurgias INT,
+    Plantoes INT
+);
+
+-- Tabela Paciente )
+CREATE TABLE Paciente (
+    Id_pessoa INT PRIMARY KEY REFERENCES Pessoa(CPF), 
+    Diagnostico VARCHAR(255)
+);
+
+-- Tabela Funcionario 
+CREATE TABLE Funcionario (
+    Id_pessoa INT PRIMARY KEY REFERENCES Pessoa(CPF), 
+	Nome VACHAR(100),
+    Salario NUMERIC(10,2),  
+    Cargo VARCHAR(100),
+    Departamento VARCHAR(100)
+);
+
+-- Tabela Estoque
+CREATE TABLE Estoque (
+    Id SERIAL PRIMARY KEY,
+    Nome VARCHAR(100),
+    Quantidade NUMERIC(10,2),
+    Validade DATE,
+    Preco NUMERIC(10,2)
+);
+
+-- Tabela Consulta 
+CREATE TABLE Consulta (
+    Id SERIAL PRIMARY KEY,
+    Data DATE,
+    Hora TIME,
+    Duracao TIME,
+    Paciente INT REFERENCES Paciente(Id_pessoa), 
+    Medico INT REFERENCES Medico(Id_pessoa), 
+    Preco NUMERIC(10,2)
+);
+
+-- Tabela Cirurgia 
+CREATE TABLE Cirurgia (
+    Id SERIAL PRIMARY KEY,
+    Procedimento VARCHAR(255),
+    Descricao VARCHAR(255),
+    Medicamentos INT, --na tabela do miro ta fk mas n tem
+    Medico INT REFERENCES Medico(Id_pessoa), 
+    Paciente INT REFERENCES Paciente(Id_pessoa), 
+    Preco NUMERIC(10,2),
+    Data DATE,
+    Hora TIME,
+    Duracao TIME
+);
+
+-- Tabela Paciente_Consulta  (criei essa tabela pra poder relacionar o paciente com múltiplas Consultas)
+CREATE TABLE Paciente_Consulta (
+    Id SERIAL PRIMARY KEY,
+    Paciente INT REFERENCES Paciente(Id_pessoa), 
+    Consulta INT REFERENCES Consulta(Id) 
+);
+
+-- Tabela Paciente_Cirurgia (a mesma coisa com essa) múltiplas Cirurgias)
+CREATE TABLE Paciente_Cirurgia (
+    Id SERIAL PRIMARY KEY,
+    Paciente INT REFERENCES Paciente(Id_pessoa), 
+    Cirurgia INT REFERENCES Cirurgia(Id) 
+);
+
+-- Tabela Especialidade
+CREATE TABLE Especialidade (
+    ID SERIAL PRIMARY KEY,
+    Nome VARCHAR(100),
+    Descricao VARCHAR(255)
+);
+
+-- Tabela Internacao 
+CREATE TABLE Internacao (
+    ID SERIAL PRIMARY KEY,
+    Nome VARCHAR(100),
+    Descricao VARCHAR(255),
+    Paciente INT REFERENCES Paciente(Id_pessoa), 
+    Data_inicio DATE,
+    Data_fim DATE
+);
